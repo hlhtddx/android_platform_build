@@ -1079,12 +1079,17 @@ recovery_resources_common := $(call include-path-for, recovery)/res
 
 # Set recovery_density to the density bucket of the device.
 recovery_density := unknown
+ifneq (,$(PRODUCT_RECOVERY_RESOURCE_DENSITY))
+# PRODUCT_RECOVERY_RESOURCE_DENSITY should be prior to PRODUCT_AAPT_PREF_CONFIG
+recovery_density := $(filter %dpi,$(PRODUCT_RECOVERY_RESOURCE_DENSITY))
+else
 ifneq (,$(PRODUCT_AAPT_PREF_CONFIG))
 # If PRODUCT_AAPT_PREF_CONFIG includes a dpi bucket, then use that value.
 recovery_density := $(filter %dpi,$(PRODUCT_AAPT_PREF_CONFIG))
 else
 # Otherwise, use the default medium density.
 recovery_densities := mdpi
+endif
 endif
 
 ifneq (,$(wildcard $(recovery_resources_common)-$(recovery_density)))
